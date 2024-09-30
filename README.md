@@ -1,4 +1,4 @@
-## Hi there 👋
+## Hi, I am Ket Shao Lun, one of the interviewee and I have complete the task in CLI using python. The source code is attached. Thank you!
 
 <!--
 **SLKet23/SLKet23** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
