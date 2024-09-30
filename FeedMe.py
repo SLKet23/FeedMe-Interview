@@ -2,6 +2,7 @@ import threading
 import time
 import queue
 import os
+import keyboard 
 
 order_id = 1
 order_queue = queue.PriorityQueue()
@@ -9,7 +10,7 @@ completed_orders = []
 bots = []
 lock = threading.Lock()
 bot_statuses = []
-command_running = True  # Flag to check if command thread is running
+command_running = True  # Flag to check if the main loop is running
 
 # Order class
 class Order:
@@ -119,7 +120,7 @@ def clear_screen():
 # Display orders and bots statuses
 def display_orders():
     with order_queue.mutex:
-        print("Welcome to McDonald's! Please type the command below: \n 1) new normal \n 2) new VIP \n 3) new bot \n 4) remove bot \n 5) exit \n")
+        print("Welcome to McDonald's! Press the keys for actions: \n 1) New Normal \n 2) New VIP \n 3) New Bot \n 4) Remove Bot \n 5) Exit \n")
         print("\nPENDING Orders in Queue:\n===================")
         if order_queue.queue:
             for priority, order in sorted(order_queue.queue):
@@ -142,40 +143,44 @@ def display_orders():
         print("No bots are running.")
 
 
-# Show command input in a separate thread
-def command_input_thread():
-    global command_running  # Declare the global variable here
+# Handle key presses
+def handle_key_presses():
+    global command_running
+
+    # Define key handlers
+    keyboard.add_hotkey('1', lambda: add_order("Normal"))
+    keyboard.add_hotkey('2', lambda: add_order("VIP"))
+    keyboard.add_hotkey('3', add_bot)
+    keyboard.add_hotkey('4', remove_bot)
+    keyboard.add_hotkey('5', stop_program)
+
+    # Keep listening for key presses
     while command_running:
-        command = input("").strip().lower()
-        if command == "new normal" or command == "1":
-            add_order("Normal")
-        elif command == "new vip" or command == "2":
-            add_order("VIP")
-        elif command == "new bot" or command == "3":
-            add_bot()
-        elif command == "remove bot" or command == "4":
-            remove_bot()
-        elif command == "exit" or command == "5":
-            print("Thank you for using McDonald's!")
-            command_running = False  # Stop the command input thread
-            break  # Exit the command input thread
-        else:
-            print("Invalid command")
+        time.sleep(0.1) 
+
+# Stop the program
+def stop_program():
+    global command_running
+    command_running = False
+    print("Thank you for using McDonald's!")
 
 
 # Main loop
 def main_loop():
-    command_thread = threading.Thread(target=command_input_thread)
-    command_thread.start()  # Start the command input thread
+    keyboard_thread = threading.Thread(target=handle_key_presses)
+    keyboard_thread.start()  
 
-    while command_thread.is_alive():  # Keep running the main loop while command thread is alive
-        clear_screen()  # Clear the screen before showing the orders and command prompt
-        display_orders()  # Display the current orders in the queue
-        time.sleep(1)  # Sleep briefly to avoid high CPU usage
+    while command_running: 
+        clear_screen() 
+        display_orders()  
+        time.sleep(1) 
 
-    command_thread.join()  # Wait for the command input thread to finish
+    keyboard_thread.join()  
 
 
 # Start the main loop and the bot system
 if __name__ == "__main__":
     main_loop()  # Start the main loop
+
+
+#pip install keyboard
