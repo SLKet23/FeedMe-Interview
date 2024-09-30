@@ -20,6 +20,7 @@
 ##  -->  Press "4" to Remove Bot
 ##  -->  Press "5" to Exit the interface
 ##
+##  *The screen will keep refreshing to update the interface*
 ##  Thank you!
 <!--
 **SLKet23/SLKet23** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
