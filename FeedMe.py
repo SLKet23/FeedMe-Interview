@@ -92,7 +92,6 @@ def add_bot():
     bots.append((bot, stop_event, None))  # Store None as a placeholder for current order
     bot_statuses.append(f"Bot {bot_id}: Idle")
     bot.start()
-    print(f"Bot {bot_id} started")
 
 
 def remove_bot():
